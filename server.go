@@ -47,6 +47,7 @@ func (self *MyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		invalidCoordinate(w)
 		return
 	}
+
 	bottomLeft := goors.MakePoint(math.Min(x0, x1), math.Min(y0, y1))
 	topRight := goors.MakePoint(math.Max(x0, x1), math.Max(y0, y1))
 	res := self.rangeSearchStructure.Query(bottomLeft, topRight)
