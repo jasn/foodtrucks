@@ -3,8 +3,10 @@ package main
 import (
 	"encoding/csv"
 	"encoding/json"
+	"fmt"
 	"github.com/jasn/goors"
 	"html/template"
+	"io/ioutil"
 	"math"
 	"net/http"
 	"os"
@@ -19,6 +21,15 @@ type Foodtruck struct {
 type MyHandler struct {
 	foodtrucks           []Foodtruck
 	rangeSearchStructure *goors.RangeSearchAdvanced
+}
+
+func readConfig() string {
+	contents, err := ioutil.ReadFile("config")
+	if err != nil {
+		fmt.Println("No config found. Assuming 127.0.0.1:8080")
+		return string("127.0.0.1:8080")
+	}
+	return string(contents)
 }
 
 func NewMyHandler(foodtrucks []Foodtruck) *MyHandler {
@@ -84,13 +95,15 @@ func readFoodtrucks() []Foodtruck {
 }
 
 func serveIndex(w http.ResponseWriter, r *http.Request) {
+	ip := readConfig()
 	t, _ := template.ParseFiles("html/index.html")
-	t.Execute(w, nil)
+	t.Execute(w, ip)
 }
 
 func main() {
 	foodtrucks := readFoodtrucks()
 	http.Handle("/", NewMyHandler(foodtrucks))
 	http.HandleFunc("/index", serveIndex)
-	http.ListenAndServe(":8080", nil)
+	ipPort := readConfig()
+	http.ListenAndServe(ipPort, nil)
 }

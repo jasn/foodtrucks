@@ -59,7 +59,7 @@ $(document).ready(function() {
         var x1 = bounds.getSouthWest().lat();
         var y0 = bounds.getNorthEast().lng();
         var y1 = bounds.getSouthWest().lng();
-        url = "http://192.168.87.111:8080/";
+        url = "{{.}}/";
         data = {x0: x0, x1: x1,
                 y0: y0, y1: y1};
         $.ajax({
