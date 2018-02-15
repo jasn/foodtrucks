@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"github.com/jasn/goors"
+	"html/template"
 	"math"
 	"net/http"
 	"os"
@@ -82,8 +83,14 @@ func readFoodtrucks() []Foodtruck {
 	return res
 }
 
+func serveIndex(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("html/index.html")
+	t.Execute(w, nil)
+}
+
 func main() {
 	foodtrucks := readFoodtrucks()
 	http.Handle("/", NewMyHandler(foodtrucks))
+	http.HandleFunc("/index", serveIndex)
 	http.ListenAndServe(":8080", nil)
 }

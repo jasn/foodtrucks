@@ -1,0 +1,93 @@
+<html>
+  <head>
+    <title>Locate Nearby Foodtrucks!</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 75%;
+        }
+    </style>
+  </head>
+    <body>
+    <script>
+
+var map;
+var markers = []
+
+function initMap() {
+    var sf = {lat: 37.77523, lng: -122.4175242};
+    map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 17,
+        center: sf
+    });
+    var marker = new google.maps.Marker({
+        position: sf,
+        map: map
+    });
+}
+
+
+function placeMarker(foodtruck) {
+    pos = {lat: foodtruck.Lat, lng: foodtruck.Lng}
+    var marker = new google.maps.Marker({
+        position: pos,
+        map: map,
+        title: foodtruck.Name
+    });
+    var infowindow = new google.maps.InfoWindow({
+        content: foodtruck.Name
+    });
+    marker.addListener('click', function() {
+        infowindow.open(map, marker);
+    });
+    markers.push(marker);
+}
+
+function clearMarkers() {
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+    }
+    markers = []
+}
+
+$(document).ready(function() {
+    $("#queryButton").click(function(event) {
+        clearMarkers();
+        var bounds = map.getBounds();
+        var x0 = bounds.getNorthEast().lat();
+        var x1 = bounds.getSouthWest().lat();
+        var y0 = bounds.getNorthEast().lng();
+        var y1 = bounds.getSouthWest().lng();
+        url = "http://192.168.87.111:8080/";
+        data = {x0: x0, x1: x1,
+                y0: y0, y1: y1};
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: data,
+            success: function(data) {
+                for (var i = 0; i < data.length; i++) {
+                    placeMarker(data[i]);
+                }
+            },
+            dataType: "json",
+            error: function() {
+                alert("Error handling here..");
+            }
+        });
+    });
+});
+    </script>
+    <div style="margin: auto; width: 50%;">
+      <h3>Locate Nearby Foodtrucks:</h3>
+      <div style="border-style: margin:auto; solid; border-width: 1px; border-color: #000000;" id="map"></div>
+      <div style="margin: auto; text-align:center;"><br>
+        <input id="queryButton" type="button" value="Find Nearby Foodtrucks!"/>
+      </div>
+    </div>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQjN5fS277Ttol1WFurHqMY0Qud_8kwYI&callback=initMap" type="text/javascript"></script>
+    <script>
+    </script>
+  </body>
+</html>
