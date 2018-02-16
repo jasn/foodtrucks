@@ -25,11 +25,13 @@ function initMap() {
 
 
 function placeMarker(foodtruck) {
+    var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
     pos = {lat: foodtruck.Lat, lng: foodtruck.Lng}
     var marker = new google.maps.Marker({
         position: pos,
         map: map,
-        title: foodtruck.Name
+	title: foodtruck.Name,
+	icon: iconBase + 'truck.png'
     });
     var infowindow = new google.maps.InfoWindow({
         content: foodtruck.Name
@@ -46,7 +48,6 @@ function clearMarkers() {
     }
     markers = []
 }
-
 $(document).ready(function() {
     $("#queryButton").click(function(event) {
         clearMarkers();
@@ -63,9 +64,36 @@ $(document).ready(function() {
             url: url,
             data: data,
             success: function(data) {
-                for (var i = 0; i < data.length; i++) {
+		var center = map.getCenter()
+		function dist(p) {
+		    // haversine distance
+		    lat0 = center.lat() * Math.PI / 180.0;
+		    lng0 = center.lng() * Math.PI / 180.0;
+		    lat1 = p.Lat * Math.PI / 180.0;
+		    lng1 = p.Lng * Math.PI / 180.0;
+		    delta_lat = lat0 - lat1;
+		    delta_lng = lng0 - lng1;
+
+		    R = 6373;
+
+		    a = Math.sin(delta_lat / 2)*Math.sin(delta_lat / 2);
+		    a += Math.cos(lat0) * Math.cos(lat1) * Math.sin(delta_lng / 2) * Math.sin(delta_lng / 2);
+		    c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+		    return R * c;
+		}
+
+		data = data.sort(function(lhs, rhs) {
+		    return dist(lhs) - dist(rhs);
+		});
+                for (var i = 0; i < data.length && i < 25; i++) {
                     placeMarker(data[i]);
                 }
+		var marker = new google.maps.Marker({
+		    position: map.getCenter(),
+		    map: map,
+		    title: "Query Point"
+		});
+		markers.push(marker);
             },
             dataType: "json",
             error: function() {
