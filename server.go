@@ -105,5 +105,9 @@ func main() {
 	http.Handle("/", NewMyHandler(foodtrucks))
 	http.HandleFunc("/index", serveIndex)
 	ipPort := readConfig()
-	http.ListenAndServe(ipPort, nil)
+	fmt.Println("Listening on", ipPort)
+	err := http.ListenAndServe(ipPort, nil)
+	if err != nil {
+	   fmt.Println("Error while listening / serving.", err)
+	}
 }
