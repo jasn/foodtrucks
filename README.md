@@ -71,3 +71,4 @@ Assuming go is intalled, we can get up and running following these steps:
 6. Edit "config" and put in the ip:port to listen on.
 7. Edit "googleapikey" and put in a working google api key (remember to configure it properly via the google interface).
 8. Run `./foodtrucks`
+9. You can now open your browser and go to the address ip:port/index where ip:port is as you it in step 7.
