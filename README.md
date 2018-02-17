@@ -8,6 +8,14 @@ Here we use the data from [DataSF](https://datasf.org/), and in particular the [
 
 In this exercise I primarily focus on the back-end with a minimal front-end (single html page with a little bit of javascript in there for the communication with the back-end).
 
+The project is in three parts:
+* [Foodtrucks](https://github.com/jasn/foodtrucks) -- this repository
+* [goors](https://github.com/jasn/goors)
+* [gorasp](https://github.com/jasn/gorasp)
+
+I have chosen to make three repositories as I think both goors and gorasp are reusable in other contexts.
+They are however all part of this exercise!
+
 ## Overview of architecture
 The architecture is a classic server-client architecture via the HTTP protocol.
 The server is responsible for storing locations of all the food trucks, and answering queries, which is 'give me all food trucks within this rectangle'.
