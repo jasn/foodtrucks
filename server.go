@@ -32,6 +32,14 @@ func readConfig() string {
 	return string(contents)
 }
 
+func readSecret() string {
+	contents, err := ioutil.ReadFile("googleapikey")
+	if err != nil {
+		panic("No secret found. Need to specify a googlemaps api-key")
+	}
+	return string(contents)
+}
+
 func NewMyHandler(foodtrucks []Foodtruck) *MyHandler {
 	var handler MyHandler
 	handler.foodtrucks = foodtrucks
@@ -94,20 +102,24 @@ func readFoodtrucks() []Foodtruck {
 	return res
 }
 
-func serveIndex(w http.ResponseWriter, r *http.Request) {
-	ip := readConfig()
+type IndexHandler struct {
+	apikey string
+}
+
+func (self *IndexHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("html/index.html")
-	t.Execute(w, ip)
+	t.Execute(w, self.apikey)
 }
 
 func main() {
 	foodtrucks := readFoodtrucks()
+	apikey := readSecret()
 	http.Handle("/", NewMyHandler(foodtrucks))
-	http.HandleFunc("/index", serveIndex)
+	http.Handle("/index", &IndexHandler{apikey})
 	ipPort := readConfig()
 	fmt.Println("Listening on", ipPort)
 	err := http.ListenAndServe(ipPort, nil)
 	if err != nil {
-	   fmt.Println("Error while listening / serving.", err)
+		fmt.Println("Error while listening / serving.", err)
 	}
 }
