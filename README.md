@@ -51,3 +51,17 @@ The solution currently is a bit weird, in that the front-end sends a query that
 describes a box and the server returns every foodtruck in that box. Wouldn't it be more natural to just send the center of the map
 (or some other query point) and just return the 25 nearest?
 Yes. Yes it would be more natural. I can give reasons why I did not do that, but I do not think any of them are any good. So I would like to change that if I were to write it again.
+
+# Setup
+Assuming go is intalled, we can get up and running following these steps:
+
+`go get github.com/jasn/gorasp`
+`go get github.com/jasn/goors`
+`go get github.com/jasn/foodtrucks`
+`cd $GOPATH/src/github.com/jasn/foodtrucks`
+`go build`
+
+Edit "config" and put in the ip:port to listen on.
+Edit "googleapikey" and put in a working google api key (remember to configure it properly via the google interface).
+
+run `./foodtrucks`
