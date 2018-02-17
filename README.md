@@ -55,11 +55,11 @@ Yes. Yes it would be more natural. I can give reasons why I did not do that, but
 # Setup
 Assuming go is intalled, we can get up and running following these steps:
 
-`go get github.com/jasn/gorasp`
-`go get github.com/jasn/goors`
-`go get github.com/jasn/foodtrucks`
-`cd $GOPATH/src/github.com/jasn/foodtrucks`
-`go build`
+* `go get github.com/jasn/gorasp`
+* `go get github.com/jasn/goors`
+* `go get github.com/jasn/foodtrucks`
+* `cd $GOPATH/src/github.com/jasn/foodtrucks`
+* `go build`
 
 Edit "config" and put in the ip:port to listen on.
 Edit "googleapikey" and put in a working google api key (remember to configure it properly via the google interface).
